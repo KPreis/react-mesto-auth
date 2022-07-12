@@ -53,3 +53,6 @@
 @import url(./blocks/login-form/__save-button/login-form__save-button.css);
 @import url(./blocks/register-form/__text/register-form__text.css);
 @import url(./blocks/register-form/__link/register-form__link.css);
+@import url(./blocks/pop-up/__tooltip/pop-up__tooltip.css);
+@import url(./blocks/pop-up/__tooltip-icon/pop-up__tooltip-icon.css);
+@import url(./blocks/pop-up/__tooltip-message/pop-up__tooltip-message.css);

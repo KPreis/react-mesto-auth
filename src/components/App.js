@@ -8,21 +8,20 @@ import AddPlacePopup from './AddPlacePopup';
 import ProtectedRoute from './ProtectedRoute';
 import Login from './Login';
 import Register from './Register';
+import InfoTooltip from './InfoTooltip';
 import { api } from '../utils/api.js';
 import { CurrentUserContext } from '../contexts/CurrentUserContext';
-import React from 'react';
+import { React, useState, useEffect } from 'react';
 import { Switch, Route } from 'react-router-dom';
 
 function App() {
-  const [cards, setData] = React.useState([]);
-  const [currentUser, setDataProfile] = React.useState({ name: '', about: '' });
-  const [card, setCard] = React.useState(null);
-  const [isEditProfilePopupOpen, setIsEditProfilePopupOpen] =
-    React.useState(false);
-  const [isAddPlacePopupOpen, setIsAddPlacePopupOpen] = React.useState(false);
-  const [isEditAvatarPopupOpen, setIsEditAvatarPopupOpen] =
-    React.useState(false);
-  React.useEffect(() => {
+  const [cards, setData] = useState([]);
+  const [currentUser, setDataProfile] = useState({ name: '', about: '' });
+  const [card, setCard] = useState(null);
+  const [isEditProfilePopupOpen, setIsEditProfilePopupOpen] = useState(false);
+  const [isAddPlacePopupOpen, setIsAddPlacePopupOpen] = useState(false);
+  const [isEditAvatarPopupOpen, setIsEditAvatarPopupOpen] = useState(false);
+  useEffect(() => {
     Promise.all([api.getInitialCards(), api.getProfile()])
       .then(([initialCards, dataProfile]) => {
         setData(initialCards);
@@ -157,6 +156,7 @@ function App() {
             onClose={closeAllPopups}
             onAddPlace={handleAddPlaceSubmit}
           />
+          <InfoTooltip isOpen={false} status={false} />
         </div>
       </CurrentUserContext.Provider>
     </div>
