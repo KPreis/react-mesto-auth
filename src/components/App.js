@@ -7,6 +7,7 @@ import EditAvatarPopup from './EditAvatarPopup';
 import AddPlacePopup from './AddPlacePopup';
 import ProtectedRoute from './ProtectedRoute';
 import Login from './Login';
+import Register from './Register';
 import { api } from '../utils/api.js';
 import { CurrentUserContext } from '../contexts/CurrentUserContext';
 import React from 'react';
@@ -123,7 +124,7 @@ function App() {
             <ProtectedRoute
               path="/"
               loggedIn={true}
-              component={Login}
+              component={Main}
               cards={cards}
               handleCardClick={handleCardClick}
               onEditProfile={handleEditProfileClick}
@@ -132,15 +133,12 @@ function App() {
               handleCardLike={handleCardLike}
               handleCardDelete={handleCardDelete}
             />
-            <Route path="/sign-up" />
-            <Route
-              path="/sign-in"
-              element={
-                <div className="loginContainer">
-                  <Login />
-                </div>
-              }
-            />
+            <Route path="/sign-up">
+              <Register />
+            </Route>
+            <Route path="/sign-in">
+              <Login />
+            </Route>
           </Switch>
           <Footer />
           <ImagePopup card={card} onClose={closeAllPopups} />
