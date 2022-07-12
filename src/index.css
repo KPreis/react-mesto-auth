@@ -47,3 +47,7 @@
 @import url(./blocks/form/__save-button/form__save-button.css);
 @import url(./blocks/form/__save-button/_disabled/form__save-button_disabled.css);
 @import url(./blocks/form/__close-button/form__close-button.css);
+@import url(./blocks/login-form/login-form.css);
+@import url(./blocks/login-form/__header/login-form__header.css);
+@import url(./blocks/login-form/__item/login-form__item.css);
+@import url(./blocks/login-form/__save-button/login-form__save-button.css);

@@ -5,21 +5,22 @@ import ImagePopup from './ImagePopup';
 import EditProfilePopup from './EditProfilePopup';
 import EditAvatarPopup from './EditAvatarPopup';
 import AddPlacePopup from './AddPlacePopup';
+import ProtectedRoute from './ProtectedRoute';
+import Login from './Login';
 import { api } from '../utils/api.js';
 import { CurrentUserContext } from '../contexts/CurrentUserContext';
 import React from 'react';
+import { Switch, Route } from 'react-router-dom';
 
 function App() {
   const [cards, setData] = React.useState([]);
   const [currentUser, setDataProfile] = React.useState({ name: '', about: '' });
   const [card, setCard] = React.useState(null);
-  const [isEditProfilePopupOpen, setIsEditProfilePopupOpen] = React.useState(
-    false
-  );
+  const [isEditProfilePopupOpen, setIsEditProfilePopupOpen] =
+    React.useState(false);
   const [isAddPlacePopupOpen, setIsAddPlacePopupOpen] = React.useState(false);
-  const [isEditAvatarPopupOpen, setIsEditAvatarPopupOpen] = React.useState(
-    false
-  );
+  const [isEditAvatarPopupOpen, setIsEditAvatarPopupOpen] =
+    React.useState(false);
   React.useEffect(() => {
     Promise.all([api.getInitialCards(), api.getProfile()])
       .then(([initialCards, dataProfile]) => {
@@ -118,15 +119,29 @@ function App() {
       <CurrentUserContext.Provider value={currentUser}>
         <div className="page">
           <Header />
-          <Main
-            cards={cards}
-            handleCardClick={handleCardClick}
-            onEditProfile={handleEditProfileClick}
-            onAddPlace={handleAddPlaceClick}
-            onEditAvatar={handleEditAvatarClick}
-            handleCardLike={handleCardLike}
-            handleCardDelete={handleCardDelete}
-          />
+          <Switch>
+            <ProtectedRoute
+              path="/"
+              loggedIn={true}
+              component={Login}
+              cards={cards}
+              handleCardClick={handleCardClick}
+              onEditProfile={handleEditProfileClick}
+              onAddPlace={handleAddPlaceClick}
+              onEditAvatar={handleEditAvatarClick}
+              handleCardLike={handleCardLike}
+              handleCardDelete={handleCardDelete}
+            />
+            <Route path="/sign-up" />
+            <Route
+              path="/sign-in"
+              element={
+                <div className="loginContainer">
+                  <Login />
+                </div>
+              }
+            />
+          </Switch>
           <Footer />
           <ImagePopup card={card} onClose={closeAllPopups} />
           <EditProfilePopup
