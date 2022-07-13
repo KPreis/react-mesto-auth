@@ -35,6 +35,7 @@ const Register = ({ onRegister }) => {
         onChange={handlePasswordChange}
         type="password"
         name="password"
+        autoComplete="on"
         placeholder="Пароль"
         required
         minLength="2"

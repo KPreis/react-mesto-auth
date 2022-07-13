@@ -10,9 +10,10 @@ import Login from './Login';
 import Register from './Register';
 import InfoTooltip from './InfoTooltip';
 import { api } from '../utils/api.js';
+import { register, authorization, validateToken } from '../utils/auth.js';
 import { CurrentUserContext } from '../contexts/CurrentUserContext';
 import { React, useState, useEffect } from 'react';
-import { Switch, Route } from 'react-router-dom';
+import { Switch, Route, useHistory, Redirect } from 'react-router-dom';
 
 function App() {
   const [cards, setData] = useState([]);
@@ -21,6 +22,15 @@ function App() {
   const [isEditProfilePopupOpen, setIsEditProfilePopupOpen] = useState(false);
   const [isAddPlacePopupOpen, setIsAddPlacePopupOpen] = useState(false);
   const [isEditAvatarPopupOpen, setIsEditAvatarPopupOpen] = useState(false);
+  const [isInfoTooltipOpen, setIsInfoTooltipOpen] = useState(false);
+  const [loggedIn, setLoggedIn] = useState(false);
+  const [statusRegister, setStatusRegister] = useState(false);
+  const [emailUserInHeader, setEmailUserInHeader] = useState('');
+
+  useEffect(() => {
+    checkToken();
+  });
+
   useEffect(() => {
     Promise.all([api.getInitialCards(), api.getProfile()])
       .then(([initialCards, dataProfile]) => {
@@ -31,6 +41,8 @@ function App() {
         console.log(error);
       });
   }, []);
+
+  const history = useHistory();
 
   const handleCardClick = (card) => {
     setCard(card);
@@ -50,6 +62,7 @@ function App() {
     setIsEditProfilePopupOpen(false);
     setIsEditAvatarPopupOpen(false);
     setCard(null);
+    setIsInfoTooltipOpen(false);
   };
 
   const handleCardLike = (card) => {
@@ -114,15 +127,69 @@ function App() {
       });
   };
 
+  const onRegister = (email, password) => {
+    register(email, password)
+      .then((result) => {
+        setIsInfoTooltipOpen(true);
+        if (result) {
+          setStatusRegister(true);
+          history.push('/sign-in');
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+        setStatusRegister(false);
+        setIsInfoTooltipOpen(false);
+      });
+  };
+
+  const onLogin = (email, password) => {
+    authorization(email, password)
+      .then((result) => {
+        if (result) {
+          setLoggedIn(true);
+          history.push('/');
+          localStorage.setItem('jwt', result.token);
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+
+  const checkToken = () => {
+    const token = localStorage.getItem('jwt');
+    if (token) {
+      validateToken(token)
+        .then((result) => {
+          if (result) {
+            setEmailUserInHeader(result.data.email);
+          }
+          setLoggedIn(true);
+          history.push('/');
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    }
+  };
+
+  const onSignOut = () => {
+    localStorage.removeItem('jwt');
+    history.push('/sign-in');
+    setLoggedIn(false);
+  };
+
   return (
     <div className="App">
       <CurrentUserContext.Provider value={currentUser}>
         <div className="page">
-          <Header />
+          <Header emailUserInHeader={emailUserInHeader} onSignOut={onSignOut} />
           <Switch>
             <ProtectedRoute
+              exact
               path="/"
-              loggedIn={true}
+              loggedIn={loggedIn}
               component={Main}
               cards={cards}
               handleCardClick={handleCardClick}
@@ -133,10 +200,13 @@ function App() {
               handleCardDelete={handleCardDelete}
             />
             <Route path="/sign-up">
-              <Register />
+              <Register onRegister={onRegister} />
             </Route>
             <Route path="/sign-in">
-              <Login />
+              <Login onLogin={onLogin} />
+            </Route>
+            <Route>
+              {loggedIn ? <Redirect to="/" /> : <Redirect to="/sign-up" />}
             </Route>
           </Switch>
           <Footer />
@@ -156,7 +226,11 @@ function App() {
             onClose={closeAllPopups}
             onAddPlace={handleAddPlaceSubmit}
           />
-          <InfoTooltip isOpen={false} status={false} />
+          <InfoTooltip
+            isOpen={isInfoTooltipOpen}
+            onClose={closeAllPopups}
+            status={statusRegister}
+          />
         </div>
       </CurrentUserContext.Provider>
     </div>
