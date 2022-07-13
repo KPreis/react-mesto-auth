@@ -23,5 +23,5 @@
 
 **Где можно посмотреть**
 
-- [Ссылка на страничку в GitHub Pages](https://kpreis.github.io/mesto-react/)
-- [https://mesto-react.kpreis.ru](https://mesto-react.kpreis.ru)
+- [Ссылка на страничку в GitHub Pages](https://kpreis.github.io/react-mesto-auth/)
+- [https://mesto-react-auth.kpreis.ru](https://mesto-react-auth.kpreis.ru)
