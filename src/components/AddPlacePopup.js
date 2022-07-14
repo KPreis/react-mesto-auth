@@ -5,6 +5,11 @@ function AddPlacePopup({ isOpen, onClose, onAddPlace }) {
   const [link, setLink] = React.useState('');
   const [name, setName] = React.useState('');
 
+  React.useEffect(() => {
+    setName('');
+    setLink('');
+  }, [isOpen]);
+
   const handleChangeName = (e) => {
     setName(e.target.value);
   };

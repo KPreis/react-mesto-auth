@@ -25,6 +25,7 @@ const Login = ({ onLogin }) => {
         onChange={handleEmailChange}
         type="text"
         name="email"
+        value={email}
         placeholder="Email"
         required
         minLength="2"
@@ -35,6 +36,7 @@ const Login = ({ onLogin }) => {
         onChange={handlePasswordChange}
         type="password"
         name="password"
+        value={password}
         autoComplete="on"
         placeholder="Пароль"
         required
