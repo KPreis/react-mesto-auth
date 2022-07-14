@@ -139,7 +139,7 @@ function App() {
       .catch((error) => {
         console.log(error);
         setStatusRegister(false);
-        setIsInfoTooltipOpen(false);
+        setIsInfoTooltipOpen(true);
       });
   };
 
